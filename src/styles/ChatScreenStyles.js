@@ -87,6 +87,14 @@ export const styles = StyleSheet.create({
     balance: {
         flexDirection: 'row',
         justifyContent: 'center',
-        color: '#36454F',
     }, 
+    balanceText: {
+        color: '#FFF',
+        backgroundColor: '#FA9884',
+        width: 'fit-content',
+        padding: 5,
+        paddingHorizontal: 10,
+        borderBottomLeftRadius: "12px",
+        borderBottomRightRadius: "12px",
+    }
 })

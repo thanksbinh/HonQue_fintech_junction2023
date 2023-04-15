@@ -8,6 +8,7 @@ import { styles } from '../styles/ChatScreenStyles'
 import CashTransferMessage from '../components/CashTransferMessage'
 import axios from 'axios'
 import MessageCover from '../components/MessageCover'
+import { formatNumber } from '../utils/format'
 
 const ChatScreen = ({ navigation, route }) => {
 
@@ -20,7 +21,6 @@ const ChatScreen = ({ navigation, route }) => {
         const fetchData = async () => {
             const doc = await db.collection('chats').doc(route.params.id).get()
             setChatOwner(doc.data().owner.displayName)
-            setCurrentBalance(doc.data().balance)
         }
 
         const unsubscribe = db
@@ -52,7 +52,7 @@ const ChatScreen = ({ navigation, route }) => {
                     <Ionicons
                         name="chevron-back"
                         size={30}
-                        color="#E74646"
+                        color="#FFF"
                     />
                 </TouchableOpacity>
             ),
@@ -61,7 +61,7 @@ const ChatScreen = ({ navigation, route }) => {
                     <Ionicons
                         name="ellipsis-vertical"
                         size={20}
-                        color="#E74646"
+                        color="#FFF"
                         style={{ marginRight: 15 }}
                     />
                 </TouchableOpacity>
@@ -127,6 +127,9 @@ const ChatScreen = ({ navigation, route }) => {
             >
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <>
+                        <View style={styles.balance}>
+                            <Text style={styles.balanceText}>Balance: {formatNumber(currentBalance)} đ</Text>
+                        </View>
                         <ScrollView contentContainerStyle={{ paddingTop: 15, }}>
                             {messages.map(({ id, data }, index) => (
                                 data.email === auth.currentUser.email ? (
@@ -135,7 +138,7 @@ const ChatScreen = ({ navigation, route }) => {
                                             {data.message}
                                         </Text>
                                     </View>
-                                ) : (
+                                ) : (data.is_verified || !data.type || auth.currentUser.displayName === chatOwner) ? (
                                     <View key={id}>
                                         {messages[index - 1]?.data.email !== data.email && (
                                             <Text style={styles.displayName}>
@@ -149,9 +152,7 @@ const ChatScreen = ({ navigation, route }) => {
                                                 source={{ uri: (index + 1 === messages.length || messages[index + 1]?.data.email !== data.email) && data.photoURL }}
                                             />
 
-                                            <View
-                                                style={styles.sender}
-                                            >
+                                            <View style={styles.sender}>
                                                 {(!data.is_verified && data.type) && (
                                                     <MessageCover docLocation={'chats/' + route.params.id + '/messages/' + id} />
                                                 )}
@@ -165,14 +166,14 @@ const ChatScreen = ({ navigation, route }) => {
                                                         title={data.message}
                                                         type={data.type}
                                                         amount={data.amount}
-                                                        is_verified={data.is_verified}
                                                         dbLocation={'chats/' + route.params.id + '/messages/' + id}
+                                                        navigation={navigation}
                                                     />
                                                 )}
                                             </View>
                                         </View>
                                     </View>
-                                )
+                                ) : (null)
                             ))}
                         </ScrollView>
 

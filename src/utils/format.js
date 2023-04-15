@@ -1,4 +1,4 @@
-export function formatNumber(num_list_users) {
-  if (!num_list_users) return "N/A"
-  return num_list_users.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+export function formatNumber(num) {
+  if (!num) return "0"
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 }

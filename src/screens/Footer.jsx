@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     right: 0,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    boxShadow: "0px -5px 5px #888",
+    boxShadow: "0px -5px 5px #aaa",
     paddingTop: 10,
   },
   button: {

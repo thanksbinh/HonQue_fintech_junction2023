@@ -41,7 +41,7 @@ const ChatHomeScreen = ({ navigation }) => {
                         <Ionicons
                             name='exit-outline'
                             size={25}
-                            color='#E74646'
+                            color='#FFF'
                             style={{ marginRight: 15 }}
                         />
                     </TouchableOpacity>

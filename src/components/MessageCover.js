@@ -16,6 +16,8 @@ const MessageCover = ({ docLocation, style }) => {
   const onCancel = () => {
     console.log('Cancelled');
     db.doc(docLocation).delete()
+
+    // Todo: send review to chatGPT
   };
 
   return (

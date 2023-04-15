@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { auth, db, firebase } from '../services/firebase';
 import VoteResult from './VoteResult';
 
-const CashTransferMessage = ({ title, type, amount, dbLocation, is_verified }) => {
+const CashTransferMessage = ({ title, type, amount, dbLocation, navigation }) => {
   const [vote, setVote] = useState(false);
   const [message, setMessage] = useState('');
   const [acceptedUsers, setAcceptedUsers] = useState([]);
@@ -48,28 +48,22 @@ const CashTransferMessage = ({ title, type, amount, dbLocation, is_verified }) =
     setMessage('You accepted')
     setAcceptedUsers([...acceptedUsers, auth.currentUser.displayName])
 
-    const batch = db.batch()
-
-    batch.update(db.doc(dbLocation), {
+    db.doc(dbLocation).update({
       acceptedUsers: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.displayName)
     })
 
     if (type === 'cash-transfer') {
-      batch.update(db.doc(dbLocation.split("/messages")[0]), {
+      db.doc(dbLocation.split("/messages")[0]).update({
         balance: firebase.firestore.FieldValue.increment(-amount)
       })
-    }
-    else if (type === 'cash-transfer-request') {
-      batch.update(db.doc(dbLocation.split("/messages")[0]), {
-        balance: firebase.firestore.FieldValue.increment(amount)
-      })
-
-      batch.update(db.doc(`users/${auth.currentUser.uid}`), {
-        balance: firebase.firestore.FieldValue.increment(-amount)
+    } else {
+      navigation.navigate('Confirm', {
+        receiverId: dbLocation.split("/messages")[0].split("chats/")[1],
+        amount: amount,
+        type: type,
+        dbLocation: dbLocation,
       })
     }
-
-    batch.commit()
   }
 
   return (
