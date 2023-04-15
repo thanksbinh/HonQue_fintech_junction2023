@@ -5,6 +5,10 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFF',
   },
+  unverifiedContainer: {
+    flex: 1,
+    backgroundColor: '#C7C6CD',
+  },
   buttonContainer: {
     paddingTop: 20,
   },

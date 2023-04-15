@@ -6,6 +6,8 @@ import { Avatar } from 'react-native-elements'
 import { auth, db } from '../services/firebase'
 import { styles } from '../styles/ChatScreenStyles'
 import CashTransferMessage from '../components/CashTransferMessage'
+import axios from 'axios'
+import MessageCover from '../components/MessageCover'
 
 const ChatScreen = ({ navigation, route }) => {
 
@@ -26,7 +28,6 @@ const ChatScreen = ({ navigation, route }) => {
             .doc(route.params.id)
             .onSnapshot(snapshot => {
                 if (snapshot.data().balance) {
-                    console.log(snapshot.data().balance)
                     setCurrentBalance(snapshot.data().balance)
                 }
             })
@@ -68,10 +69,10 @@ const ChatScreen = ({ navigation, route }) => {
         })
     }, [navigation, messages])
 
-    const sendMessage = () => {
+    const sendMessage = async () => {
         Keyboard.dismiss()
 
-        db.collection('chats').doc(route.params.id).collection('messages').add({
+        await db.collection('chats').doc(route.params.id).collection('messages').add({
             timestamp: new Date(),
             message: input,
             displayName: auth.currentUser.displayName,
@@ -80,6 +81,24 @@ const ChatScreen = ({ navigation, route }) => {
         })
 
         setInput('')
+
+        if (owner != auth.currentUser.displayName) return;
+
+        const answer = await axios.get('http://localhost:3001/ask', {
+            params: { question: input }
+        }).then(res => res.data.answer)
+
+        if (answer.includes('Đáp án: A')) return;
+
+        await db.collection('chats').doc(route.params.id).collection('messages').add({
+            timestamp: new Date(),
+            message: auth.currentUser.displayName + " đang " + (answer.includes('Đáp án: B') ? 'yêu cầu nhận tiền.' : 'tạo vote.') + " " + (answer.includes('Số tiền: ') ? answer.split('Số tiền: ')[1].split(' ')[0] : ""),
+            displayName: "ChatGPT",
+            photoURL: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/240px-ChatGPT_logo.svg.png",
+            type: answer.includes('Đáp án: B') ? 'cash-transfer-request' : 'cash-transfer',
+            amount: answer.includes('Số tiền: ') ? answer.split('Số tiền: ')[1].split(' ')[0] : 0,
+            is_verified: false
+        })
     }
 
     useLayoutEffect(() => {
@@ -108,58 +127,52 @@ const ChatScreen = ({ navigation, route }) => {
             >
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <>
-                        <View style={styles.balance}>
-                            <View><Text>{"Balance: " + currentBalance}</Text></View>
-                        </View>
                         <ScrollView contentContainerStyle={{ paddingTop: 15, }}>
                             {messages.map(({ id, data }, index) => (
-                                data.email === auth.currentUser.email ?
-                                    (
-                                        <View key={id} style={styles.reciever}>
-                                            <Text style={styles.recieverText}>
-                                                {data.message}
+                                data.email === auth.currentUser.email ? (
+                                    <View key={id} style={styles.receiver}>
+                                        <Text style={styles.receiverText}>
+                                            {data.message}
+                                        </Text>
+                                    </View>
+                                ) : (
+                                    <View key={id}>
+                                        {messages[index - 1]?.data.email !== data.email && (
+                                            <Text style={styles.displayName}>
+                                                {data.displayName} {data.displayName === chatOwner && "(Owner)"}
                                             </Text>
-                                        </View>
-                                    )
-                                    :
-                                    (
-                                        <View key={id}>
-                                            {messages[index - 1]?.data.email !== data.email && (
-                                                <Text style={styles.displayName}>
-                                                    {data.displayName} {data.displayName === chatOwner && "(Owner)"}
-                                                </Text>
-                                            )}
-                                            <View style={styles.containerSender}>
-                                                <Avatar
-                                                    rounded
-                                                    size={30}
-                                                    source={{ uri: messages[index + 1]?.data.email !== data.email && data.photoURL }}
-                                                />
+                                        )}
+                                        <View style={styles.containerSender}>
+                                            <Avatar
+                                                rounded
+                                                size={30}
+                                                source={{ uri: (index + 1 === messages.length || messages[index + 1]?.data.email !== data.email) && data.photoURL }}
+                                            />
 
-                                                {!data.type ?
-                                                    <View
-                                                        key={id}
-                                                        style={styles.sender}
-                                                    >
-                                                        <Text style={styles.senderText}>
-                                                            {data.message}
-                                                        </Text>
-                                                    </View> :
-                                                    <View
-                                                        key={id}
-                                                        style={styles.sender}
-                                                    >
-                                                        <CashTransferMessage
-                                                            title={data.message}
-                                                            type={data.type}
-                                                            amount={data.amount}
-                                                            dbLocation={'chats/' + route.params.id + '/messages/' + id}
-                                                        />
-                                                    </View>
-                                                }
+                                            <View
+                                                style={styles.sender}
+                                            >
+                                                {(!data.is_verified && data.type) && (
+                                                    <MessageCover docLocation={'chats/' + route.params.id + '/messages/' + id} />
+                                                )}
+
+                                                {!data.type ? (
+                                                    <Text style={styles.senderText}>
+                                                        {data.message}
+                                                    </Text>
+                                                ) : (
+                                                    <CashTransferMessage
+                                                        title={data.message}
+                                                        type={data.type}
+                                                        amount={data.amount}
+                                                        is_verified={data.is_verified}
+                                                        dbLocation={'chats/' + route.params.id + '/messages/' + id}
+                                                    />
+                                                )}
                                             </View>
                                         </View>
-                                    )
+                                    </View>
+                                )
                             ))}
                         </ScrollView>
 
@@ -186,7 +199,7 @@ const ChatScreen = ({ navigation, route }) => {
                         </View>
                     </>
                 </TouchableWithoutFeedback>
-            </KeyboardAvoidingView>
+            </KeyboardAvoidingView >
         </>
     )
 }

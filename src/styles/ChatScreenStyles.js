@@ -3,23 +3,24 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
     headerTitle: {
         color: '#FFF',
-        fontWeight: '700'
+        fontWeight: '700',
     },
     container: {
         flex: 1,
         backgroundColor: '#FFE5CA'
     },
-    reciever: {
+    receiver: {
         padding: 10,
         backgroundColor: '#E74646',
         alignSelf: 'flex-end',
         borderRadius: 6,
+        borderBottomRightRadius: 0,
         marginRight: 15,
         marginBottom: 5,
         maxWidth: '80%',
         position: 'relative'
     },
-    recieverText: {
+    receiverText: {
         color: '#FFF',
         fontWeight: '500',
     },
@@ -35,6 +36,7 @@ export const styles = StyleSheet.create({
         backgroundColor: '#FFF',
         alignSelf: 'flex-start',
         borderRadius: 6,
+        borderBottomLeftRadius: 0,
         marginLeft: 5,
         maxWidth: '80%',
         position: 'relative',
@@ -49,8 +51,8 @@ export const styles = StyleSheet.create({
     },
     buttonSendMessage: {
         backgroundColor: '#FFF',
-        width: 40,
-        height: 40,
+        width: 45,
+        height: 45,
         borderRadius: 6,
         alignItems: 'center',
         justifyContent: 'center'
@@ -84,5 +86,5 @@ export const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         color: '#36454F',
-    }
+    }, 
 })
