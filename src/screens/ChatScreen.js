@@ -94,8 +94,8 @@ const ChatScreen = ({ navigation, route }) => {
         await db.collection('chats').doc(route.params.id).collection('messages').add({
             timestamp: new Date(),
             message: auth.currentUser.displayName + (answerId === "B" ? ' đang yêu cầu nhận tiền: ' : ' đang tạo vote: ') + formatNumber(amount) + " đ",
-            displayName: "ChatGPT",
-            photoURL: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/240px-ChatGPT_logo.svg.png",
+            displayName: "Thủ quỹ ảo",
+            photoURL: "https://lh3.googleusercontent.com/a/AGNmyxbqS6Pkisg45w-MsosbL_4d1Fyn2EhbIh5zhqNWhg=s96-c",
             type: answerId === "B" ? 'cash-transfer-request' : 'cash-transfer',
             amount: amount,
             is_verified: false
