@@ -4,10 +4,11 @@ import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './src/screens/LoginScreen';
 import 'react-native-gesture-handler'
 import RegisterScreen from './src/screens/RegisterScreen';
-import HomeScreen from './src/screens/HomeScreen';
+import ChatHomeScreen from './src/screens/ChatHomeScreen';
 import AddChatScreen from './src/screens/AddChatScreen';
 import ChatScreen from './src/screens/ChatScreen';
 import { LogBox } from 'react-native';
+import HomeScreen from './src/screens/HomeScreen';
 
 LogBox.ignoreAllLogs()
 
@@ -40,6 +41,11 @@ export default function App() {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
+        />
+
+        <Stack.Screen
+          name="ChatHome"
+          component={ChatHomeScreen}
         />
 
         <Stack.Screen

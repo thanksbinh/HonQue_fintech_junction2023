@@ -82,7 +82,7 @@ const ChatScreen = ({ navigation, route }) => {
 
         setInput('')
 
-        if (owner != auth.currentUser.displayName) return;
+        if (chatOwner != auth.currentUser.displayName) return;
 
         const answer = await axios.get('http://localhost:3001/ask', {
             params: { question: input }

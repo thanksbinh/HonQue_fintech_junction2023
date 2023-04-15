@@ -7,7 +7,7 @@ const configuration = new Configuration({
 
 async function runCompletion(prompt) {
   const openai = new OpenAIApi(configuration);
-  const finalPrompt = "Trả lại đáp án với format: Đáp án: A/B/C, nếu có nhắc đến số tiền, trả lại Số tiền: ... (dạng số), không giải thích thêm. Quyết định ý định của người dùng sau bằng 1 trong các đáp án: A. Chat bình thường hoặc không nhắc đến số tiền, B. Yêu cầu đối phương gửi tiền, C. Thông báo việc sử dụng tiền trong quỹ. Câu chat của người dùng là: '" + prompt + "'"
+  const finalPrompt = "Trả lại đáp án với format: Đáp án: A/B/C, nếu có nhắc đến số tiền, trả lại Số tiền: ... (dạng số), không giải thích thêm. Quyết định ý định của người dùng sau bằng 1 trong các đáp án: A. Chat bình thường hoặc không nhắc đến số tiền hoặc trường hợp ngoại lệ, B. Yêu cầu đối phương gửi tiền, C. Thông báo việc sử dụng tiền trong quỹ. Câu chat của người dùng là: '" + prompt + "'"
 
   const completion = await openai.createCompletion({
     model: "text-davinci-003",

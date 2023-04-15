@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
         width: 50,
         backgroundColor: '#E74646',
         position: 'fixed',
-        bottom: 40,
+        bottom: 75,
         right: 15,
         borderRadius: 50,
         alignItems: 'center',

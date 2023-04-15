@@ -62,7 +62,9 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         width: '100%',
-        padding: 15
+        padding: 15,
+        position: "sticky",
+        bottom: 0
     },
     textInput: {
         bottom: 0,

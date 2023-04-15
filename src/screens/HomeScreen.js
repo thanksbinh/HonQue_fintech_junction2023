@@ -1,89 +1,129 @@
-import React, { useLayoutEffect, useState, useEffect } from 'react'
-import { SafeAreaView, ScrollView, TouchableOpacity, View } from 'react-native'
-import CustomListItem from '../components/CustomListItem'
-import { auth, db } from '../services/firebase'
+import React from 'react'
+import { SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, View, Text } from 'react-native'
+import Footer from './Footer'
 import { StatusBar } from 'expo-status-bar'
-import { Ionicons } from '@expo/vector-icons'
-import { styles } from '../styles/HomeScreenStyles'
+import { Avatar } from 'react-native-elements'
+import { auth, db } from '../services/firebase'
+import { useLayoutEffect } from 'react'
+import { useEffect } from 'react'
+import { useState } from 'react'
+import { formatNumber } from '../utils/format'
 
 const HomeScreen = ({ navigation }) => {
+  const displayName = auth.currentUser.displayName
+  const avatarUrl = auth.currentUser.photoURL
+  const [balance, setBalance] = useState(0)
 
-    const [chats, setChats] = useState([])
+  useEffect(() => {
+    const unsubscribe = db.doc(`users/${auth.currentUser.uid}`).onSnapshot(snapshot => (
+      setBalance(snapshot.data().balance)
+    ))
 
-    const signOutUser = () => {
-        auth.signOut().then(() => {
-            navigation.replace('Login')
-        })
-    }
+    return unsubscribe
+  }, [])
 
-    useEffect(() => {
-        const unsubscribe = db.collection('chats').onSnapshot(snapshot => (
-            setChats(snapshot.docs.map(doc => ({
-                id: doc.id,
-                data: doc.data()
-            })))
-        ))
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: '',
+      headerStyle: { backgroundColor: '#FA9884', elevation: 0 },
+      headerRight: () => (<View />),
+      headerLeft: () => (
+        <View style={styles.rootContainer}>
+          <View style={styles.avatar}>
+            <Avatar
+              rounded
+              size={50}
+              source={{ uri: avatarUrl }}
+            />
+          </View>
 
-        return unsubscribe
-    }, [])
+          <Text style={styles.displayName}>
+            {displayName}
+          </Text>
+        </View>
+      ),
+    })
+  }, [navigation])
 
-    useLayoutEffect(() => {
-        navigation.setOptions({
-            title: 'Messages',
-            headerStyle: { backgroundColor: '#FA9884', elevation: 0 },
-            headerTintStyle: { color: '#fff' },
-            headerTintColor: '#fff',
-            headerLeft: () => (<View />),
-            headerRight: () => (
-                <View style={{ marginLeft: 20 }}>
-                    <TouchableOpacity activeOpacity={0.5} onPress={signOutUser}>
-                        <Ionicons
-                            name='exit-outline'
-                            size={25}
-                            color='#E74646'
-                            style={{ marginRight: 15 }}
-                        />
-                    </TouchableOpacity>
-                </View>
-            ),
-        })
-    }, [navigation])
+  return (
+    <SafeAreaView>
+      <StatusBar style="light" />
 
-    const enterChat = (id, chatName) => {
-        navigation.navigate('Chat', {
-            id: id,
-            chatName: chatName
-        })
-    }
+      <View style={styles.container}>
+        <View style={styles.balanceDetails}>
+          <View style={styles.textRow}>
+            <Text style={styles.label}>ViettelPay</Text>
+            <Text style={styles.value}>{formatNumber(balance)} đ</Text>
+          </View>
 
-    return (
-        <SafeAreaView>
-            <StatusBar style="light" />
+          <View style={styles.textRow}>
+            <Text style={styles.label}>Tiền di động</Text>
+            <Text style={styles.value}>0 đ</Text>
+          </View>
 
-            <ScrollView style={styles.container}>
-                {chats.map(({ id, data: { chatName } }) => (
-                    <CustomListItem
-                        id={id}
-                        chatName={chatName}
-                        key={id}
-                        enterChat={enterChat}
-                    />
-                ))}
-            </ScrollView>
+          <View style={styles.textRow}>
+            <Text style={styles.label}>Viettel++</Text>
+            <Text style={styles.value}>0 đ</Text>
+          </View>
+        </View>
+      </View>
 
-            <TouchableOpacity
-                style={styles.buttonAddChat}
-                onPress={() => navigation.navigate('AddChat')}
-            >
-                <Ionicons
-                    name='add'
-                    size={30}
-                    color='#fff'
-                    style={{ marginLeft: 3 }}
-                />
-            </TouchableOpacity>
-        </SafeAreaView>
-    )
+      <Footer navigation={navigation} currentTab={"Home"} />
+    </SafeAreaView >
+  )
 }
+
+const styles = StyleSheet.create({
+  button: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  activeButton: {
+    backgroundColor: '#E74646',
+  },
+  text: {
+    fontWeight: 'semibold',
+    color: '#8d99ae',
+  },
+  avatar: {
+    padding: 10,
+  },
+  displayName: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#FFF',
+  },
+  rootContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  container: {
+    backgroundColor: '#fff',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#dcdcdc',
+  },
+  balanceDetails: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  textRow: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  label: {
+    fontSize: 14,
+    color: '#8d99ae',
+  },
+  value: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#2b2d42',
+    marginTop: 6,
+  },
+});
 
 export default HomeScreen
