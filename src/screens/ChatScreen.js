@@ -82,21 +82,22 @@ const ChatScreen = ({ navigation, route }) => {
 
         setInput('')
 
-        if (chatOwner != auth.currentUser.displayName) return;
-
         const answer = await axios.get('http://localhost:3001/ask', {
             params: { question: input }
         }).then(res => res.data.answer)
 
-        if (answer.includes('Đáp án: A')) return;
+        const answerId = answer.includes('Đáp án: A') ? "A" : answer.includes('Đáp án: B') ? "B" : "C";
+        const amount = answer.includes('Số tiền: ') ? answer.split('Số tiền: ')[1].split(' ')[0] : 0;
+
+        if (!amount || answerId === "A") return;
 
         await db.collection('chats').doc(route.params.id).collection('messages').add({
             timestamp: new Date(),
-            message: auth.currentUser.displayName + " đang " + (answer.includes('Đáp án: B') ? 'yêu cầu nhận tiền.' : 'tạo vote.') + " " + (answer.includes('Số tiền: ') ? answer.split('Số tiền: ')[1].split(' ')[0] : ""),
+            message: auth.currentUser.displayName + (answerId === "B" ? ' đang yêu cầu nhận tiền: ' : ' đang tạo vote: ') + formatNumber(amount) + " đ",
             displayName: "ChatGPT",
             photoURL: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/240px-ChatGPT_logo.svg.png",
-            type: answer.includes('Đáp án: B') ? 'cash-transfer-request' : 'cash-transfer',
-            amount: answer.includes('Số tiền: ') ? answer.split('Số tiền: ')[1].split(' ')[0] : 0,
+            type: answerId === "B" ? 'cash-transfer-request' : 'cash-transfer',
+            amount: amount,
             is_verified: false
         })
     }

@@ -10,6 +10,7 @@ import ChatScreen from './src/screens/ChatScreen';
 import { LogBox } from 'react-native';
 import HomeScreen from './src/screens/HomeScreen';
 import ConfirmScreen from './src/screens/ConfirmScreen';
+import SuccessScreen from './src/screens/SuccessScreen';
 
 LogBox.ignoreAllLogs()
 
@@ -68,6 +69,12 @@ export default function App() {
         <Stack.Screen
           name="Confirm"
           component={ConfirmScreen}
+        />
+
+        <Stack.Screen
+          name="Success"
+          component={SuccessScreen}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

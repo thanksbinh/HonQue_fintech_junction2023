@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { auth, db, firebase } from '../services/firebase';
 import VoteResult from './VoteResult';
 
+const totalUsers = 4;
 const CashTransferMessage = ({ title, type, amount, dbLocation, navigation }) => {
   const [vote, setVote] = useState(false);
   const [message, setMessage] = useState('');
@@ -25,6 +26,14 @@ const CashTransferMessage = ({ title, type, amount, dbLocation, navigation }) =>
       } else if (declined && declined.includes(auth.currentUser.displayName)) {
         setVote(true)
         setMessage('You declined')
+      }
+
+      if (accepted.length - declined.length >= totalUsers / 2) {
+        setVote(true)
+        setMessage('This transaction is approved')
+      } else if (accepted.length - declined.length >= -totalUsers / 2) {
+        setVote(true)
+        setMessage('This transaction is pending')
       }
     })
   }, [])
@@ -52,11 +61,11 @@ const CashTransferMessage = ({ title, type, amount, dbLocation, navigation }) =>
       acceptedUsers: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.displayName)
     })
 
-    if (type === 'cash-transfer') {
+    if (type === 'cash-transfer' && acceptedUsers.length - declinedUsers.length >= totalUsers / 2) {
       db.doc(dbLocation.split("/messages")[0]).update({
         balance: firebase.firestore.FieldValue.increment(-amount)
       })
-    } else {
+    } else if (type === 'cash-transfer-request') {
       navigation.navigate('Confirm', {
         receiverId: dbLocation.split("/messages")[0].split("chats/")[1],
         amount: amount,
@@ -72,7 +81,10 @@ const CashTransferMessage = ({ title, type, amount, dbLocation, navigation }) =>
 
       <View style={styles.buttonContainer}>
         {(vote && type === "cash-transfer") ? (
-          <VoteResult acceptedUsers={acceptedUsers} declinedUsers={declinedUsers} />
+          <>
+            <VoteResult acceptedUsers={acceptedUsers} declinedUsers={declinedUsers} totalUsers={totalUsers} />
+            <Text style={styles.senderMessage}>{message}</Text>
+          </>
         ) : vote ? (
           <Text style={styles.senderMessage}>{message}</Text>
         ) : (

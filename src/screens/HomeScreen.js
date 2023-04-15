@@ -1,6 +1,6 @@
 import React from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, View, Text } from 'react-native'
-import Footer from './Footer'
+import Footer from '../components/Footer'
 import { StatusBar } from 'expo-status-bar'
 import { Avatar } from 'react-native-elements'
 import { auth, db } from '../services/firebase'

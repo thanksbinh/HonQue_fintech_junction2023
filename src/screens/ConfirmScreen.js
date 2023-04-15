@@ -74,7 +74,9 @@ const ConfirmScreen = ({ navigation, route }) => {
     })
 
     await batch.commit()
-    navigation.replace('ChatHome')
+    navigation.replace('Success', {
+      amount: amount,
+    })
   }
 
   return (

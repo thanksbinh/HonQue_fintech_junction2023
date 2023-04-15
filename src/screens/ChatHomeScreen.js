@@ -5,7 +5,7 @@ import { auth, db } from '../services/firebase'
 import { StatusBar } from 'expo-status-bar'
 import { Ionicons } from '@expo/vector-icons'
 import { styles } from '../styles/HomeScreenStyles'
-import Footer from './Footer'
+import Footer from '../components/Footer'
 
 const ChatHomeScreen = ({ navigation }) => {
 

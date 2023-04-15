@@ -1,30 +1,42 @@
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#FFF',
-  },
   container: {
+    backgroundColor: "#FFF",
     flex: 1,
-    padding: 16,
-    backgroundColor: '#FFF',
+  },
+  imageContainer: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    borderBottomWidth: 1,
+    borderColor: "#DDD",
+    marginHorizontal: 20,
+    paddingVertical: 20,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "semibold",
+    marginTop: 5,
+  },
+  amount: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginTop: 5,
   },
   section: {
     paddingVertical: 16,
-    marginHorizontal: 16,
+    marginHorizontal: 18,
+  },
+  sectionHeader: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
   sectionContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
-  },
-  avatar: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    marginRight: 8,
+    marginVertical: 8,
   },
   text: {
     fontSize: 16,
@@ -35,30 +47,9 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     color: '#000',
   },
-  button: {
-    backgroundColor: '#FFF',
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 10,
-    borderColor: '#E74646',
-    borderRadius: "24px",
-    borderWidth: 1,
-  },
-  buttonText: {
-    color: '#E74646',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  flex: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  avatarContainer: {
-    marginRight: 8,
-  },
   borderBottom: {
     borderBottomWidth: 1,
+    borderColor: "#DDD",
   },
   buttonConfirm: {
     backgroundColor: '#E74646', 

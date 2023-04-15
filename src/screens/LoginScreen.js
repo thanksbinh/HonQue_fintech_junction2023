@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
-import { KeyboardAvoidingView, Text, View, TextInput, TouchableOpacity, Keyboard, ActivityIndicator } from 'react-native'
 import { StatusBar } from 'expo-status-bar'
+import React, { useEffect, useState } from 'react'
+import { ActivityIndicator, Keyboard, KeyboardAvoidingView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { auth } from '../services/firebase'
 import { styles } from '../styles/LoginScreenStyles'
 

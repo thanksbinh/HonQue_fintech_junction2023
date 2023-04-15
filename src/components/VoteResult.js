@@ -2,14 +2,14 @@ import React from 'react';
 import { Text, View } from 'react-native';
 import { ProgressBar } from 'react-native-paper';
 
-const VoteResult = ({ acceptedUsers, declinedUsers }) => {
+const VoteResult = ({ acceptedUsers, declinedUsers, totalUsers }) => {
 
-  const totalVotes = acceptedUsers.length + declinedUsers.length;
+  const totalVotes = totalUsers;
   const acceptedPercentage = ((acceptedUsers.length / totalVotes) * 100).toFixed(2);
   const declinedPercentage = ((declinedUsers.length / totalVotes) * 100).toFixed(2);
 
   return (
-    <View>
+    <View style={{paddingBottom: 10}}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <Text style={{ fontSize: 16 }}>Accepted</Text>
         <Text style={{ fontSize: 12 }}>{acceptedPercentage}%</Text>
