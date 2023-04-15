@@ -1,18 +1,15 @@
 import { Ionicons } from '@expo/vector-icons'
 import { StatusBar } from 'expo-status-bar'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
-import { Keyboard, KeyboardAvoidingView, ScrollView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
-import { Avatar } from 'react-native-elements'
+import { Keyboard, KeyboardAvoidingView, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import ChatScreenFooter from '../components/ChatScreenFooter'
+import MessageReceive from '../components/MessageReceive'
 import { auth, db } from '../services/firebase'
 import { styles } from '../styles/ChatScreenStyles'
-import CashTransferMessage from '../components/CashTransferMessage'
-import axios from 'axios'
-import MessageCover from '../components/MessageCover'
 import { formatNumber } from '../utils/format'
 
 const ChatScreen = ({ navigation, route }) => {
 
-    const [input, setInput] = useState('')
     const [messages, setMessages] = useState([])
     const [chatOwner, setChatOwner] = useState('')
     const [currentBalance, setCurrentBalance] = useState(0);
@@ -69,39 +66,6 @@ const ChatScreen = ({ navigation, route }) => {
         })
     }, [navigation, messages])
 
-    const sendMessage = async () => {
-        Keyboard.dismiss()
-
-        await db.collection('chats').doc(route.params.id).collection('messages').add({
-            timestamp: new Date(),
-            message: input,
-            displayName: auth.currentUser.displayName,
-            email: auth.currentUser.email,
-            photoURL: auth.currentUser.photoURL
-        })
-
-        setInput('')
-
-        const answer = await axios.get('http://localhost:3001/ask', {
-            params: { question: input }
-        }).then(res => res.data.answer)
-
-        const answerId = answer.includes('Đáp án: A') ? "A" : answer.includes('Đáp án: B') ? "B" : "C";
-        const amount = answer.includes('Số tiền: ') ? answer.split('Số tiền: ')[1].split(' ')[0] : 0;
-
-        if (!amount || answerId === "A") return;
-
-        await db.collection('chats').doc(route.params.id).collection('messages').add({
-            timestamp: new Date(),
-            message: auth.currentUser.displayName + (answerId === "B" ? ' đang yêu cầu nhận tiền: ' : ' đang tạo vote: ') + formatNumber(amount) + " đ",
-            displayName: "Thủ quỹ ảo",
-            photoURL: "https://lh3.googleusercontent.com/a/AGNmyxbqS6Pkisg45w-MsosbL_4d1Fyn2EhbIh5zhqNWhg=s96-c",
-            type: answerId === "B" ? 'cash-transfer-request' : 'cash-transfer',
-            amount: amount,
-            is_verified: false
-        })
-    }
-
     useLayoutEffect(() => {
         const unsubscribe = db
             .collection('chats')
@@ -140,65 +104,19 @@ const ChatScreen = ({ navigation, route }) => {
                                         </Text>
                                     </View>
                                 ) : (data.is_verified || !data.type || auth.currentUser.displayName === chatOwner) ? (
-                                    <View key={id}>
-                                        {messages[index - 1]?.data.email !== data.email && (
-                                            <Text style={styles.displayName}>
-                                                {data.displayName} {data.displayName === chatOwner && "(Owner)"}
-                                            </Text>
-                                        )}
-                                        <View style={styles.containerSender}>
-                                            <Avatar
-                                                rounded
-                                                size={30}
-                                                source={{ uri: (index + 1 === messages.length || messages[index + 1]?.data.email !== data.email) && data.photoURL }}
-                                            />
-
-                                            <View style={styles.sender}>
-                                                {(!data.is_verified && data.type) && (
-                                                    <MessageCover docLocation={'chats/' + route.params.id + '/messages/' + id} />
-                                                )}
-
-                                                {!data.type ? (
-                                                    <Text style={styles.senderText}>
-                                                        {data.message}
-                                                    </Text>
-                                                ) : (
-                                                    <CashTransferMessage
-                                                        title={data.message}
-                                                        type={data.type}
-                                                        amount={data.amount}
-                                                        dbLocation={'chats/' + route.params.id + '/messages/' + id}
-                                                        navigation={navigation}
-                                                    />
-                                                )}
-                                            </View>
-                                        </View>
-                                    </View>
+                                    <MessageReceive
+                                        data={data}
+                                        messages={messages}
+                                        index={index}
+                                        docLocation={'chats/' + route.params.id + '/messages/' + id}
+                                        isChatOwner={data.displayName === chatOwner}
+                                        navigation={navigation}
+                                    />
                                 ) : (null)
                             ))}
                         </ScrollView>
 
-                        <View style={styles.footer}>
-                            <TextInput
-                                placeholder='Message'
-                                style={styles.textInput}
-                                value={input}
-                                onChangeText={(text) => setInput(text)}
-                                placeholderTextColor="gray"
-                            />
-
-                            <TouchableOpacity
-                                style={styles.buttonSendMessage}
-                                activeOpacity={0.5}
-                                onPress={sendMessage}
-                            >
-                                <Ionicons
-                                    name='send'
-                                    size={20}
-                                    color='#E74646'
-                                />
-                            </TouchableOpacity>
-                        </View>
+                        <ChatScreenFooter id={route.params.id} isChatOwner={auth.currentUser.displayName === chatOwner}/>
                     </>
                 </TouchableWithoutFeedback>
             </KeyboardAvoidingView >

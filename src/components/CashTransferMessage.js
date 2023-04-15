@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { auth, db, firebase } from '../services/firebase';
 import VoteResult from './VoteResult';
 
-const totalUsers = 4;
+const totalUsers = 5;
 const CashTransferMessage = ({ title, type, amount, dbLocation, navigation }) => {
   const [vote, setVote] = useState(false);
   const [message, setMessage] = useState('');
@@ -31,7 +31,7 @@ const CashTransferMessage = ({ title, type, amount, dbLocation, navigation }) =>
       if (accepted.length - declined.length >= totalUsers / 2) {
         setVote(true)
         setMessage('This transaction is approved')
-      } else if (accepted.length - declined.length >= -totalUsers / 2) {
+      } else if (accepted.length - declined.length < -totalUsers / 2) {
         setVote(true)
         setMessage('This transaction is pending')
       }
@@ -61,7 +61,7 @@ const CashTransferMessage = ({ title, type, amount, dbLocation, navigation }) =>
       acceptedUsers: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.displayName)
     })
 
-    if (type === 'cash-transfer' && acceptedUsers.length - declinedUsers.length >= totalUsers / 2) {
+    if ((type === 'cash-transfer') && (acceptedUsers.length - declinedUsers.length + 1 >= totalUsers / 2)) {
       db.doc(dbLocation.split("/messages")[0]).update({
         balance: firebase.firestore.FieldValue.increment(-amount)
       })

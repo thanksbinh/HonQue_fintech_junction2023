@@ -70,7 +70,7 @@ export const styles = StyleSheet.create({
         bottom: 0,
         height: 45,
         flex: 1,
-        marginRight: 8,
+        marginHorizontal: 8,
         borderColor: 'transparent',
         backgroundColor: '#FFF',
         borderWidth: 1,
@@ -87,7 +87,7 @@ export const styles = StyleSheet.create({
     balance: {
         flexDirection: 'row',
         justifyContent: 'center',
-    }, 
+    },
     balanceText: {
         color: '#FFF',
         backgroundColor: '#FA9884',
@@ -96,5 +96,41 @@ export const styles = StyleSheet.create({
         paddingHorizontal: 10,
         borderBottomLeftRadius: "12px",
         borderBottomRightRadius: "12px",
-    }
+    },
+    manualMenu: {
+        flexDirection: 'row',
+        width: '100%',
+        padding: 15,
+        backgroundColor: "#FFF", 
+        height: "50%"
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        width: '100%',
+        height: "fit-content"
+    },
+    button: {
+        backgroundColor: '#E74646',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: "12px",
+        flex: 1,
+        marginHorizontal: 5,
+        flexDirection: 'row',
+    },
+    buttonText: {
+        color: '#fff',
+        fontWeight: 'bold',
+        textAlign: 'center',
+        paddingLeft: "10px"
+    },
+    manualMenuOverlay: {
+        backgroundColor: "#FFF",
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1,
+    },
 })
