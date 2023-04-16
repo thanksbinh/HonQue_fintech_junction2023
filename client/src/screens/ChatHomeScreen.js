@@ -11,12 +11,6 @@ const ChatHomeScreen = ({ navigation }) => {
 
     const [chats, setChats] = useState([])
 
-    const signOutUser = () => {
-        auth.signOut().then(() => {
-            navigation.replace('Login')
-        })
-    }
-
     useEffect(() => {
         const unsubscribe = db.collection('chats').onSnapshot(snapshot => (
             setChats(snapshot.docs.map(doc => ({
@@ -35,18 +29,7 @@ const ChatHomeScreen = ({ navigation }) => {
             headerTintStyle: { color: '#fff' },
             headerTintColor: '#fff',
             headerLeft: () => (<View />),
-            headerRight: () => (
-                <View style={{ marginLeft: 20 }}>
-                    <TouchableOpacity activeOpacity={0.5} onPress={signOutUser}>
-                        <Ionicons
-                            name='exit-outline'
-                            size={25}
-                            color='#FFF'
-                            style={{ marginRight: 15 }}
-                        />
-                    </TouchableOpacity>
-                </View>
-            ),
+            headerRight: () => (<View />),
         })
     }, [navigation])
 

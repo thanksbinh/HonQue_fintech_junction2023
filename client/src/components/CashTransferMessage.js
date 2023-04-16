@@ -93,7 +93,7 @@ const CashTransferMessage = ({ title, type, amount, dbLocation, navigation }) =>
               style={[styles.button, vote && styles.selectedButton]}
               onPress={handleAccept}
             >
-              <Text style={[styles.buttonText, vote && styles.selectedButtonText]}>Accept</Text>
+              <Text style={[styles.buttonText, vote && styles.selectedButtonText]}>Đồng ý</Text>
             </TouchableOpacity>
 
             {type === 'cash-transfer' && (
@@ -101,7 +101,7 @@ const CashTransferMessage = ({ title, type, amount, dbLocation, navigation }) =>
                 style={[styles.button, vote && styles.selectedButton]}
                 onPress={handleDecline}
               >
-                <Text style={[styles.buttonText, vote && styles.selectedButtonText]}>Decline</Text>
+                <Text style={[styles.buttonText, vote && styles.selectedButtonText]}>Từ chối</Text>
               </TouchableOpacity>
             )}
           </>

@@ -1,15 +1,15 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native'
+import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import LoginScreen from './src/screens/LoginScreen';
-import 'react-native-gesture-handler'
-import RegisterScreen from './src/screens/RegisterScreen';
-import ChatHomeScreen from './src/screens/ChatHomeScreen';
-import AddChatScreen from './src/screens/AddChatScreen';
-import ChatScreen from './src/screens/ChatScreen';
+import React from 'react';
 import { LogBox } from 'react-native';
-import HomeScreen from './src/screens/HomeScreen';
+import 'react-native-gesture-handler';
+import AddChatScreen from './src/screens/AddChatScreen';
+import ChatHomeScreen from './src/screens/ChatHomeScreen';
+import ChatScreen from './src/screens/ChatScreen';
 import ConfirmScreen from './src/screens/ConfirmScreen';
+import HomeScreen from './src/screens/HomeScreen';
+import LoginScreen from './src/screens/LoginScreen';
+import RegisterScreen from './src/screens/RegisterScreen';
 import SuccessScreen from './src/screens/SuccessScreen';
 
 LogBox.ignoreAllLogs()

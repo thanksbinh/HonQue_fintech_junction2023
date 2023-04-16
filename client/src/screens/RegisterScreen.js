@@ -3,6 +3,7 @@ import { KeyboardAvoidingView, StyleSheet, View, TouchableOpacity, Text, TextInp
 import { StatusBar } from 'expo-status-bar'
 import { auth, db } from '../services/firebase'
 import { styles } from '../styles/RegisterScreenStyles'
+import axios from 'axios'
 
 const RegisterScreen = ({ navigation }) => {
 
@@ -12,28 +13,38 @@ const RegisterScreen = ({ navigation }) => {
     const [imageURL, setImageURL] = useState('')
     const [loading, setLoading] = useState(false)
 
-    const register = () => {
-        setLoading(false)
+    const register = async () => {
+        setLoading(true)
 
-        auth
-            .createUserWithEmailAndPassword(email, password)
-            .then((authUser) => {
-                authUser.user.updateProfile({
-                    displayName: name,
-                    photoURL: imageURL || 'https://secure.gravatar.com/avatar/d3afc60628a78f856952f6d76a2f37b8?s=150&r=g&d=https://delivery.farmina.com.br/wp-content/plugins/userswp/assets/images/no_profile.png',
-                })
-
-                console.log(authUser)
-                db.collection("users").doc(authUser.user.uid).set({
-                    displayName: name,
-                    email: email,
-                    imageURL: imageURL || 'https://secure.gravatar.com/avatar/d3afc60628a78f856952f6d76a2f37b8?s=150&r=g&d=https://delivery.farmina.com.br/wp-content/plugins/userswp/assets/images/no_profile.png',
-                }, { merge: true })
+        try {
+            const authUser = await auth.createUserWithEmailAndPassword(email, password)
+            await authUser.user.updateProfile({
+                displayName: name,
+                photoURL: imageURL || 'https://thumbs.dreamstime.com/b/default-avatar-profile-vector-user-profile-default-avatar-profile-vector-user-profile-profile-179376714.jpg',
             })
-            .catch(error => alert(error.message))
+
+            console.log(authUser)
+            await db.collection("users").doc(authUser.user.uid).set({
+                displayName: name,
+                email: email,
+                imageURL: imageURL || 'https://thumbs.dreamstime.com/b/default-avatar-profile-vector-user-profile-default-avatar-profile-vector-user-profile-profile-179376714.jpg',
+            }, { merge: true })
+
+            const id = await axios.post('http://localhost:3001/card')
+            const customer = await axios.post('http://localhost:3001/customer', {
+                id: authUser.user.uid,
+                displayName: name,
+                avatarUrl: imageURL || 'https://thumbs.dreamstime.com/b/default-avatar-profile-vector-user-profile-default-avatar-profile-vector-user-profile-profile-179376714.jpg',
+                email: email,
+                phoneNumber: '',
+                cardId: id.data.id
+            })
+        } catch (error) {
+            alert(error.message)
+        }
 
         Keyboard.dismiss()
-        setLoading(true)
+        setLoading(false)
     }
 
     return (

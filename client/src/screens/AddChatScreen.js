@@ -4,24 +4,36 @@ import { auth, db } from '../services/firebase'
 import { StatusBar } from 'expo-status-bar'
 import { Ionicons } from '@expo/vector-icons'
 import { styles } from '../styles/AddChatScreenStyles'
+import axios from 'axios'
 
 const AddChatScreen = ({ navigation }) => {
 
     const [input, setInput] = useState('')
 
     const createChat = async () => {
-        await db.collection('chats').add({
-            chatName: input,
-            owner: {
-                uid: auth.currentUser.uid,
-                displayName: auth.currentUser.displayName,
-                email: auth.currentUser.email,
-            },
-            balance: 0,
-        }).then(() => {
-            navigation.goBack()
-        }).catch(error => alert(error))
+        try {
+            const chat = await db.collection('chats').add({
+                chatName: input,
+                owner: {
+                    uid: auth.currentUser.uid,
+                    displayName: auth.currentUser.displayName,
+                    email: auth.currentUser.email,
+                },
+                balance: 0,
+            })
+    
+            const id = await axios.post('http://localhost:3001/card')
+            const customerGroup = await axios.post('http://localhost:3001/customerGroup', {
+                id: chat.id,
+                chatOwnerId: auth.currentUser.uid,
+                chatName: input,
+                cardId: id.data.id
+            })
+        } catch (error) {
+            alert(error.message)
+        }
 
+        navigation.goBack()
         Keyboard.dismiss()
     }
 

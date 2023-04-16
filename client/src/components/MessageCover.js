@@ -23,11 +23,11 @@ const MessageCover = ({ docLocation, style }) => {
   return (
     <View style={styles.overlay}>
       <TouchableOpacity style={styles.button} onPress={onAccept}>
-        <Text>Accept</Text>
+        <Text>Lưu</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.button} onPress={onCancel}>
-        <Text>Cancel</Text>
+        <Text>Hủy</Text>
       </TouchableOpacity>
     </View>
   )

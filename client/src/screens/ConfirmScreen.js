@@ -5,7 +5,7 @@ import { SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
 import { Avatar } from 'react-native-elements'
 import { auth, db, firebase } from '../services/firebase'
 import { formatNumber } from '../utils/format'
-
+import axios from 'axios'
 import { styles } from '../styles/ConfirmScreenStyles'
 
 const ConfirmScreen = ({ navigation, route }) => {
@@ -76,6 +76,12 @@ const ConfirmScreen = ({ navigation, route }) => {
     await batch.commit()
     navigation.replace('Success', {
       amount: amount,
+    })
+
+    axios.post("http://localhost:3001/transaction", {
+      senderId: auth.currentUser.uid,
+      receiverId: dbLocation.split("/messages")[0].split("chats/")[1],
+      amount: amount
     })
   }
 

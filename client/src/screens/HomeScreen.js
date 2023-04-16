@@ -1,12 +1,10 @@
-import React from 'react'
-import { SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, View, Text } from 'react-native'
-import Footer from '../components/Footer'
+import { Ionicons } from '@expo/vector-icons'
 import { StatusBar } from 'expo-status-bar'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Avatar } from 'react-native-elements'
+import Footer from '../components/Footer'
 import { auth, db } from '../services/firebase'
-import { useLayoutEffect } from 'react'
-import { useEffect } from 'react'
-import { useState } from 'react'
 import { formatNumber } from '../utils/format'
 
 const HomeScreen = ({ navigation }) => {
@@ -22,11 +20,28 @@ const HomeScreen = ({ navigation }) => {
     return unsubscribe
   }, [])
 
+  const signOutUser = () => {
+    auth.signOut().then(() => {
+      navigation.replace('Login')
+    })
+  }
+
   useLayoutEffect(() => {
     navigation.setOptions({
       title: '',
       headerStyle: { backgroundColor: '#FA9884', elevation: 0 },
-      headerRight: () => (<View />),
+      headerRight: () => (
+        <View style={{ marginLeft: 20 }}>
+          <TouchableOpacity activeOpacity={0.5} onPress={signOutUser}>
+            <Ionicons
+              name='exit-outline'
+              size={25}
+              color='#FFF'
+              style={{ marginRight: 15 }}
+            />
+          </TouchableOpacity>
+        </View>
+      ),
       headerLeft: () => (
         <View style={styles.rootContainer}>
           <View style={styles.avatar}>
