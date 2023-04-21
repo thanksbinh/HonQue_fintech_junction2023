@@ -19,7 +19,7 @@ Thực hiện các dịch vụ qua giọng nói hoặc đoạn chat :
 Khi khách hàng sử dụng bot để thực hiện các giao dịch nhanh như chuyển tiền, rút tiền, vay vốn, … Họ có thể nói hoặc chat với bot. Khi đó chatbot sẽ đưa ra dịch vụ phù hợp nhất.
 Trong các cuộc trò chuyện hoặc gọi điện với người khác. Từ các câu từ khách hàng sử dụng và thói quen theo lịch sử sử dụng dịch vụ của khách hàng, chatbot sẽ đề xuất các dịch vụ phù hợp nhất tự động cho họ. Khi đó nếu khách hàng muốn dùng dịch vụ có thể tùy ý lựa chọn.
 
-Smart group chat :
+Thủ quỹ ảo :
 Như chúng ta đã biết, thủ quỹ là người giữ tiền của 1 nhóm/ lớp/ tổ chức ..., nhưng mà điểm yếu của việc có 1 thủ quỹ là thiếu minh bạch, ngoài 1 vài người ra thì không ai biết trong quỹ có bao nhiêu, đã tiêu vào những việc gì.
 Thủ quỹ ảo(chatbot) sẽ làm tốt hơn việc đó, với chức năng chính là quản lý tiền trong quỹ, tạo vote khi có việc cần dùng quỹ, tự động thông báo những người nộp tiền quỹ chậm, … ngoài ra thì thủ quỹ ảo sẽ là một con bot thân thiện với người dùng, giống như một thành viên trong nhóm
  
@@ -32,11 +32,19 @@ Dự đoán chính xác intent của khách hàng :
 Tạo tập data training lớn cho bot. Trong tập data này sẽ là các câu text mà khách hàng thường sử dụng khi cần dùng tới dịch vụ tài chính cùng với đó là các label (dịch vụ mà khách hàng sẽ sử dụng ) tương ứng. Sử dụng các model của tensorflow để train dữ liệu giúp bot dự đoán chính xác. 
 Ngoài ra bot sẽ lưu lịch sử, ghi nhớ thói quen dùng dịch vụ giao dịch của khách hàng. Từ đó khi gặp các cuộc hội thoại tương tự có thể đưa ra intent chính xác. 
 
-Demo:
-<details>
-  <summary>Chức năng yêu cầu nộp quỹ</summary>
-  <img src="https://user-images.githubusercontent.com/24197774/233515054-d274c01b-3acf-4340-a919-b5c0cecb5ee3.png" width="800">
-  <img src="https://user-images.githubusercontent.com/24197774/233515067-245ccab3-f0f3-4812-9d7a-720b94c32e82.png" width="800">
-  <img src="https://user-images.githubusercontent.com/24197774/233515220-08839cec-551b-4872-a4b1-77e98cf7e439.png" width="800">
-  <img src="https://user-images.githubusercontent.com/24197774/233515096-90ea28d0-16f4-49de-977c-79f36c78b127.png" width="800">
-</details>
+## Demo thủ quỹ ảo:
+Chức năng yêu cầu nộp quỹ
+<div>
+  <img src="https://user-images.githubusercontent.com/24197774/233515054-d274c01b-3acf-4340-a919-b5c0cecb5ee3.png" width="200">
+  <img src="https://user-images.githubusercontent.com/24197774/233515067-245ccab3-f0f3-4812-9d7a-720b94c32e82.png" width="200">
+  <img src="https://user-images.githubusercontent.com/24197774/233515220-08839cec-551b-4872-a4b1-77e98cf7e439.png" width="200">
+  <img src="https://user-images.githubusercontent.com/24197774/233515096-90ea28d0-16f4-49de-977c-79f36c78b127.png" width="200">
+</div>
+ 
+Chức năng sử dụng quỹ qua hình thức vote
+<div>
+  <img src="https://user-images.githubusercontent.com/24197774/233516097-4fadfc28-6e61-4187-8a6c-39e2a718a0c4.png" width="200">
+  <img src="https://user-images.githubusercontent.com/24197774/233516111-0b6097cf-7235-4b48-935b-17824d3875a9.png" width="200">
+  <img src="https://user-images.githubusercontent.com/24197774/233516116-41c6018b-4605-4c85-ac7c-e0310567012c.png" width="200">
+</div>
+
